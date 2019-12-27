@@ -221,10 +221,7 @@ class InputPageState extends State<InputPage> {
         BottomButtom(
           buttonTitle: 'CALCULATE YOUR BMI',
           onTap: (){
-            CalculatorBrain calc = CalculatorBrain(height, weight);
-
-            
-
+            CalculatorBrain calc = CalculatorBrain(height, weight);          
             Navigator.push(context, MaterialPageRoute(builder: (context)=> ResultPage(
               resultBMI: calc.calculateBMI(),
               resultText: calc.getResult(),
