@@ -1,4 +1,5 @@
 import 'package:bmi_calculator_flutter/calculator_brain.dart';
+import 'package:bmi_calculator_flutter/components/bottom_reusable_card.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bmi_calculator_flutter/constants.dart';
@@ -7,10 +8,8 @@ import 'package:bmi_calculator_flutter/screens/results_page.dart';
 
 import 'package:bmi_calculator_flutter/components/bottom_button.dart';
 import 'package:bmi_calculator_flutter/components/reusable_card.dart';
-import 'package:bmi_calculator_flutter/components/round_icon_buttom.dart';
 import 'package:bmi_calculator_flutter/components/top_card_content.dart';
-
-
+import 'package:bmi_calculator_flutter/components/middle_card.dart';
 
 enum Gender { male, female }
 
@@ -40,6 +39,7 @@ class InputPageState extends State<InputPage> {
       selectedGender = Gender.female;
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -80,51 +80,13 @@ class InputPageState extends State<InputPage> {
         Expanded(
           child: ReusableCard(
             color: kCardSelectedColor,
-            cardChild: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('HEIGHT', style: kLabelTextStyle),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment:
-                      CrossAxisAlignment.baseline, // match baseline of children
-                  textBaseline: TextBaseline
-                      .alphabetic, // has to be setted for the baseline alignment to work
-                  children: <Widget>[
-                    Text(
-                      '$height',
-                      style: kNumbersStyle,
-                    ),
-                    Text(
-                      'cm',
-                      style: kLabelTextStyle,
-                    )
-                  ],
-                ),
-                SliderTheme(
-                  data: SliderTheme.of(context).copyWith(
-                      // this could be set in main.dart
-                      inactiveTickMarkColor: kUnselectedContentColor,
-                      activeTrackColor: Colors.white,
-                      thumbColor: kBottomContainerColor,
-                      overlayColor: Color(
-                          0x29EB1555), // the 2 numbers after the 'x' is the transparency
-                      thumbShape:
-                          RoundSliderThumbShape(enabledThumbRadius: 15.0),
-                      overlayShape:
-                          RoundSliderOverlayShape(overlayRadius: 30.0)),
-                  child: Slider(
-                    value: height.toDouble(),
-                    onChanged: (double newValue) {
-                      setState(() {
-                        height = newValue.round();
-                      });
-                    },
-                    min: 100.0,
-                    max: 220.0,
-                  ),
-                )
-              ],
+            cardChild: MiddleCard(
+              height: height,
+              setHeight: (double newValue) {
+                setState(() {
+                  height = newValue.round();
+                });
+              },
             ),
           ),
         ),
@@ -134,84 +96,39 @@ class InputPageState extends State<InputPage> {
               Expanded(
                 child: ReusableCard(
                   color: kCardSelectedColor,
-                  cardChild: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'WEIGHT',
-                        style: kLabelTextStyle,
-                      ),
-                      Text(
-                        weight.toString(),
-                        style: kNumbersStyle,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          RoundIconButton(
-                            icon: FontAwesomeIcons.minus,
-                            onPressed: () {
-                              setState(() {
-                                weight--;
-                              });
-                            },
-                          ),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          RoundIconButton(
-                            icon: FontAwesomeIcons.plus,
-                            onPressed: () {
-                              setState(() {
-                                weight++;
-                              });
-                            },
-                          )
-                        ],
-                      )
-                    ],
+                  cardChild: BottomReusableCard(
+                    dataText: 'weight',
+                    data: weight,
+                    dataDecrement: () {
+                      setState(() {
+                        weight--;
+                      });
+                    },
+                    dataIncrement: () {
+                      setState(() {
+                        weight++;
+                      });
+                    },
                   ),
                 ),
               ),
               Expanded(
+                // creates age card
                 child: ReusableCard(
                   color: kCardSelectedColor,
-                  cardChild: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'AGE',
-                        style: kLabelTextStyle,
-                      ),
-                      Text(
-                        age.toString(),
-                        style: kNumbersStyle,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          RoundIconButton(
-                            icon: FontAwesomeIcons.minus,
-                            onPressed: () {
-                              setState(() {
-                                age--;
-                              });
-                            },
-                          ),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          RoundIconButton(
-                            icon: FontAwesomeIcons.plus,
-                            onPressed: () {
-                              setState(() {
-                                age++;
-                              });
-                            },
-                          )
-                        ],
-                      )
-                    ],
+                  cardChild: BottomReusableCard(
+                    dataText: 'age',
+                    data: age,
+                    dataDecrement: () {
+                      setState(() {
+                        age--;
+                      });
+                    },
+                    dataIncrement: () {
+                      setState(() {
+                        age++;
+                      });
+                    },
                   ),
                 ),
               ),
@@ -220,16 +137,20 @@ class InputPageState extends State<InputPage> {
         ),
         BottomButtom(
           buttonTitle: 'CALCULATE YOUR BMI',
-          onTap: (){
-            CalculatorBrain calc = CalculatorBrain(height, weight);          
-            Navigator.push(context, MaterialPageRoute(builder: (context)=> ResultPage(
-              resultBMI: calc.calculateBMI(),
-              resultText: calc.getResult(),
-              interpretationText: calc.getInterpretation(),
-            )));
+          onTap: () {
+            CalculatorBrain calc = CalculatorBrain(height, weight);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ResultPage(
+                          resultBMI: calc.calculateBMI(),
+                          resultText: calc.getResult(),
+                          interpretationText: calc.getInterpretation(),
+                        )));
           },
         )
       ]),
     );
   }
 }
+

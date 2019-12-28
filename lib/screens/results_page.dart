@@ -3,21 +3,16 @@ import 'package:bmi_calculator_flutter/constants.dart';
 
 import 'package:bmi_calculator_flutter/components/bottom_button.dart';
 import 'package:bmi_calculator_flutter/components/reusable_card.dart';
-import 'package:bmi_calculator_flutter/components/round_icon_buttom.dart';
-import 'package:bmi_calculator_flutter/components/top_card_content.dart';
-
-import 'package:bmi_calculator_flutter/screens/input_page.dart';
-
 
 class ResultPage extends StatelessWidget {
   final String resultBMI;
   final String resultText;
   final String interpretationText;
 
-  ResultPage({@required this.resultBMI, @required this.resultText, @required this.interpretationText});
-
-
-
+  ResultPage(
+      {@required this.resultBMI,
+      @required this.resultText,
+      @required this.interpretationText});
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +59,11 @@ class ResultPage extends StatelessWidget {
             ),
           ),
           BottomButtom(
-              buttonTitle: 'RE-CALCULATE YOUR BMI',
-              onTap: (){
-                Navigator.pop(context);
-              },
-             )
+            buttonTitle: 'RE-CALCULATE YOUR BMI',
+            onTap: () {
+              Navigator.pop(context);
+            },
+          )
         ],
       ),
     );
